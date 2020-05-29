@@ -11,6 +11,35 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/urlShortener',{
 app.set('view engine','ejs');
 app.use(express.urlencoded({ extended:false}));
 
+//Admin Routes
+app.post('/admin',async (req,res)=>{
+	const email = req.body.email;
+	const password = req.body.password;
+	if(email === 'jainujjawal1999@gmail.com' && password === 'Ujjawal@1999')
+		res.redirect('/adminDetails');
+});
+
+app.get('/adminPage',(req,res)=>{
+	res.render('admin_login');
+});
+
+app.get('/adminDetails',async (req,res)=>{
+	const shortUrls = await ShortUrl.find();
+	res.render('admin',{shortUrls});
+})
+
+app.get('/adminDetails/delete/:shortUrl',async (req,res)=>{
+	const shortUrl = req.params.shortUrl;
+	await ShortUrl.findOneAndRemove({short:shortUrl}).then((data)=>{
+		if(!data)
+			res.status(404);
+		else
+			res.redirect('/adminDetails');
+	}).catch((err)=>{
+		res.send(400);
+	});
+});
+
 app.get('/',async (req,res) => {
 	const shortUrls = await ShortUrl.find();
 	res.render('index',{shortUrls});

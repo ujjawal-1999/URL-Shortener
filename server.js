@@ -17,6 +17,8 @@ app.post('/admin',async (req,res)=>{
 	const password = req.body.password;
 	if(email === 'jainujjawal1999@gmail.com' && password === 'Ujjawal@1999')
 		res.redirect('/adminDetails');
+	else
+		res.redirect('/adminPage');
 });
 
 app.get('/adminPage',(req,res)=>{
